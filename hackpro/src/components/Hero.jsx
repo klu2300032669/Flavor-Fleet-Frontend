@@ -1,287 +1,239 @@
-  import React, { useState } from "react";
-  import styled from "styled-components";
-  import { Link, useNavigate } from "react-router-dom";
+// Hero.jsx
+import React, { useState } from "react";
+import styled from "styled-components";
+import { Link, useNavigate } from "react-router-dom";
 
-  const HeroSection = styled.section`
+const HeroSection = styled.section`
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  background-color: #fafafa;
+
+  @media (max-width: 768px) {
     height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    padding: 0 40px;
-    position: relative;
-    overflow: hidden;
-    z-index: 2;
-    background: url('https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=1600') no-repeat center center/cover;
-    background-attachment: fixed;
+    padding: 0 20px;
+  }
+`;
 
-    @media (max-width: 768px) {
-      padding: 0 20px;
-    }
-  `;
+const HeroBackground = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  transition: transform 0.5s ease;
 
-  const HeroOverlay = styled.div`
-    position: absolute;
-    top: 0;
-    left: 0;
+  &:hover {
+    transform: scale(1.02);
+  }
+`;
+
+const LeftImage = styled.div`
+  flex: 1;
+  background: url('https://images.pexels.com/photos/376464/pexels-photo-376464.jpeg?auto=compress&cs=tinysrgb&w=1260') no-repeat center/cover;
+  filter: brightness(0.95) contrast(1.05);
+  transition: filter 0.3s ease;
+`;
+
+const RightImage = styled.div`
+  flex: 1;
+  background: url('https://images.pexels.com/photos/70497/pexels-photo-70497.jpeg?auto=compress&cs=tinysrgb&w=1600') no-repeat center/cover;
+  filter: brightness(0.95) contrast(1.05);
+  transition: filter 0.3s ease;
+`;
+
+const CenterOverlay = styled.div`
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(180deg, rgba(255, 64, 129, 0.92), rgba(255, 215, 64, 0.92));
+  clip-path: polygon(15% 0, 85% 0, 100% 100%, 0% 100%);
+  opacity: 0.88;
+  z-index: 1;
+  transition: opacity 0.3s ease;
+
+  &:hover {
+    opacity: 0.95;
+  }
+
+  @media (max-width: 768px) {
     width: 100%;
-    height: 100%;
-    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.7));
-    z-index: 1;
-  `;
+    clip-path: none;
+    background: linear-gradient(180deg, rgba(255, 64, 129, 0.88), rgba(255, 215, 64, 0.88));
+  }
+`;
 
-  const ParticlesContainer = styled.div`
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    z-index: 2;
-  `;
+const HeroContent = styled.div`
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  max-width: 900px;
+  padding: 0 30px;
+  animation: fadeIn 1.5s ease-out;
 
-  const Particle = styled.div`
-    position: absolute;
-    width: 10px;
-    height: 10px;
-    background: radial-gradient(circle, #ff8a65, transparent);
-    border-radius: 50%;
-    opacity: 0.85;
-    animation: twinkle 4s infinite ease-in-out;
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+`;
 
-    @media (max-width: 768px) {
-      width: 8px;
-      height: 8px;
-    }
-  `;
+const HeroTitle = styled.h1`
+  font-size: 65px;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: -1.2px;
+  margin-bottom: 25px;
+  text-shadow: 0 3px 12px rgba(0, 0, 0, 0.15);
 
-  const HeroContent = styled.div`
-    position: relative;
-    z-index: 3;
-    max-width: 1100px;
-    padding: 20px;
+  @media (max-width: 768px) {
+    font-size: 45px;
+  }
+`;
 
-    @media (max-width: 768px) {
-      max-width: 100%;
-    }
-  `;
+const HeroSubtitle = styled.p`
+  font-size: 24px;
+  font-weight: 400;
+  color: #fff;
+  margin-bottom: 45px;
+  opacity: 0.92;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 
-  const HeroTitle = styled.h1`
-    font-size: 80px;
-    font-weight: 700;
-    letter-spacing: -2.5px;
-    background: linear-gradient(45deg, #ff8a65, #ff4081, #ffd740);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    animation: float 3s ease-in-out infinite;
-    margin-bottom: 30px; /* Added spacing */
+  @media (max-width: 768px) {
+    font-size: 20px;
+  }
+`;
 
-    @keyframes float {
-      0% { transform: translateY(0); }
-      50% { transform: translateY(-10px); }
-      100% { transform: translateY(0); }
-    }
+const SearchBar = styled.div`
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 60px;
+  padding: 10px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.12);
+  max-width: 650px;
+  margin: 0 auto;
+  transition: box-shadow 0.3s ease;
 
-    @media (max-width: 768px) {
-      font-size: 50px; /* Slightly larger for impact */
-      letter-spacing: -1.5px;
-      margin-bottom: 25px;
-    }
-  `;
+  &:hover {
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.18);
+  }
 
-  const HeroSubtitle = styled.p`
-    font-size: 28px;
-    font-weight: 400;
-    margin: 25px 0 45px;
-    color: #fff;
-    text-shadow: 0 4px 20px rgba(0, 0, 0, 0.7);
-    letter-spacing: 0.8px;
-
-    @media (max-width: 768px) {
-      font-size: 20px;
-      margin: 20px 0 40px;
-    }
-  `;
-
-  const InputGroup = styled.div`
-    display: flex;
+  @media (max-width: 768px) {
     flex-direction: column;
-    gap: 25px;
-    align-items: center;
-    justify-content: center;
+    gap: 12px;
+    padding: 15px;
+    border-radius: 40px;
+  }
+`;
+
+const Input = styled.input`
+  flex: 1;
+  border: none;
+  padding: 14px 25px;
+  font-size: 17px;
+  color: #333;
+  background: transparent;
+
+  &::placeholder {
+    color: #999;
+  }
+
+  &:focus {
+    outline: none;
+  }
+`;
+
+const Button = styled.button`
+  background: linear-gradient(90deg, #ff4081, #ffd740);
+  color: #fff;
+  border: none;
+  padding: 14px 35px;
+  font-size: 17px;
+  font-weight: 600;
+  border-radius: 50px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+  &:hover {
+    transform: scale(1.05);
+    box-shadow: 0 3px 15px rgba(255, 64, 129, 0.4);
+  }
+
+  @media (max-width: 768px) {
     width: 100%;
+    padding: 14px 0;
+  }
+`;
 
-    @media (max-width: 768px) {
-      gap: 20px;
+const CtaButton = styled(Link)`
+  display: inline-block;
+  margin-top: 35px;
+  padding: 15px 45px;
+  background: linear-gradient(90deg, #ffd740, #ff4081);
+  color: #fff;
+  font-size: 19px;
+  font-weight: 600;
+  border-radius: 50px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+
+  &:hover {
+    transform: scale(1.05);
+    box-shadow: 0 5px 20px rgba(255, 64, 129, 0.3);
+  }
+`;
+
+const Hero = () => {
+  const [searchTerm, setSearchTerm] = useState("");
+  const navigate = useNavigate();
+
+  const handleSearch = () => {
+    if (searchTerm.trim()) {
+      navigate(`/menu?search=${encodeURIComponent(searchTerm)}`);
+    } else {
+      navigate("/menu");
     }
-  `;
-
-  const SearchBar = styled.div`
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 20px;
-    width: 100%;
-    max-width: 700px;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 60px;
-    padding: 15px 25px;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(10px);
-    border: 2px solid rgba(255, 64, 129, 0.4);
-    transition: all 0.5s ease;
-
-    &:hover {
-      border-color: #ffd740;
-      box-shadow: 0 15px 50px rgba(255, 64, 129, 0.3);
-    }
-
-    @media (max-width: 768px) {
-      flex-direction: column;
-      gap: 15px;
-      max-width: 95%;
-      padding: 20px;
-    }
-  `;
-
-  const Input = styled.input`
-    background: transparent;
-    color: #fff;
-    padding: 16px 30px;
-    font-size: 18px;
-    border-radius: 50px;
-    border: none;
-    width: 100%;
-    max-width: 450px;
-    transition: all 0.4s ease;
-    font-family: "Poppins", sans-serif;
-
-    &::placeholder {
-      color: rgba(255, 255, 255, 0.7);
-      font-style: italic;
-    }
-
-    &:focus {
-      background: rgba(255, 255, 255, 0.15);
-      box-shadow: 0 0 25px rgba(255, 215, 64, 0.5);
-      outline: none;
-    }
-
-    @media (max-width: 768px) {
-      max-width: 100%;
-      padding: 16px 30px;
-      font-size: 18px;
-    }
-  `;
-
-  const Button = styled.button`
-    background: linear-gradient(45deg, #ff4081, #ffd740);
-    color: #fff;
-    font-size: 18px;
-    font-weight: 700;
-    border-radius: 50px;
-    border: none;
-    padding: 16px 35px;
-    box-shadow: 0 8px 25px rgba(255, 64, 129, 0.5);
-    transition: all 0.4s ease;
-    font-family: "Poppins", sans-serif;
-    cursor: pointer;
-
-    &:hover {
-      background: linear-gradient(45deg, #ffd740, #ff4081);
-      transform: scale(1.08);
-      box-shadow: 0 12px 35px rgba(255, 64, 129, 0.7);
-    }
-
-    @media (max-width: 768px) {
-      padding: 16px 35px;
-      font-size: 18px;
-    }
-  `;
-
-  const CtaButton = styled(Link)`
-    display: inline-block;
-    margin-top: 50px;
-    padding: 18px 50px;
-    background: linear-gradient(135deg, #ff4081, #ffd740, #ff8a65);
-    background-size: 200% 200%;
-    color: #fff;
-    text-decoration: none;
-    font-size: 22px;
-    font-weight: 700;
-    border-radius: 50px;
-    box-shadow: 0 10px 35px rgba(255, 64, 129, 0.6);
-    transition: all 0.4s ease;
-    animation: gradientAnimation 5s ease infinite;
-    font-family: "Poppins", sans-serif;
-
-    &:hover {
-      transform: scale(1.12);
-      box-shadow: 0 15px 45px rgba(255, 64, 129, 0.8);
-      color: #fff;
-    }
-
-    @media (max-width: 768px) {
-      margin-top: 50px;
-      padding: 16px 40px;
-      font-size: 20px;
-    }
-  `;
-
-  const Hero = () => {
-    const [searchTerm, setSearchTerm] = useState("");
-    const navigate = useNavigate();
-
-    const handleSearch = () => {
-      if (searchTerm.trim()) {
-        navigate(`/menu?search=${encodeURIComponent(searchTerm)}`);
-      } else {
-        navigate("/menu");
-      }
-    };
-
-    const handleKeyPress = (e) => {
-      if (e.key === "Enter") {
-        handleSearch();
-      }
-    };
-
-    return (
-      <HeroSection className="parallax">
-        <HeroOverlay />
-        <ParticlesContainer>
-          {[...Array(50)].map((_, i) => (
-            <Particle
-              key={i}
-              style={{
-                animationDelay: `${i * 0.08}s`,
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
-              }}
-            />
-          ))}
-        </ParticlesContainer>
-        <HeroContent>
-          <HeroTitle>Bringing You The Best Bites!</HeroTitle>
-          <HeroSubtitle>Discover new tastes, fresh meals, and exclusive offers at your fingertips.</HeroSubtitle>
-          <InputGroup>
-            <SearchBar>
-              <Input
-                type="text"
-                className="form-control"
-                placeholder="Search exquisite dishes..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                onKeyPress={handleKeyPress}
-              />
-              <Button className="btn-explore" onClick={handleSearch}>
-                <i className="fas fa-search"></i> Discover
-              </Button>
-            </SearchBar>
-          </InputGroup>
-          <CtaButton to="/menu" className="glow">
-            Order Your Feast
-          </CtaButton>
-        </HeroContent>
-      </HeroSection>
-    );
   };
 
-  export default Hero;
+  const handleKeyPress = (e) => {
+    if (e.key === "Enter") {
+      handleSearch();
+    }
+  };
+
+  return (
+    <HeroSection>
+      <HeroBackground>
+        <LeftImage />
+        <RightImage />
+      </HeroBackground>
+      <CenterOverlay />
+      <HeroContent>
+        <HeroTitle>Discover Delicious Delights</HeroTitle>
+        <HeroSubtitle>Explore a world of flavors delivered right to your door.</HeroSubtitle>
+        <SearchBar>
+          <Input
+            type="text"
+            placeholder="Search for dishes, restaurants..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            onKeyPress={handleKeyPress}
+          />
+          <Button onClick={handleSearch}>
+            Search
+          </Button>
+        </SearchBar>
+        <CtaButton to="/menu">Browse Menu</CtaButton>
+      </HeroContent>
+    </HeroSection>
+  );
+};
+
+export default Hero;
