@@ -1,119 +1,184 @@
-  import React from "react";
-  import styled from "styled-components";
+// Services.jsx
+import React, { useEffect, useRef, useState } from "react";
+import styled from "styled-components";
 
-  const ServicesSection = styled.section`
-    padding: 100px 0;
-    background: rgba(0, 0, 0, 0.75);
+const ServicesSection = styled.section`
+  padding: 80px 0;
+  background: linear-gradient(180deg, #f8f8f8, #fff);
 
-    @media (max-width: 768px) {
-      padding: 60px 0;
+  @media (max-width: 768px) {
+    padding: 50px 0;
+  }
+`;
+
+const ServicesTitle = styled.h2`
+  font-size: 45px;
+  font-weight: 700;
+  margin-bottom: 50px;
+  color: #333;
+  text-align: center;
+  letter-spacing: -0.5px;
+
+  @media (max-width: 768px) {
+    font-size: 35px;
+    margin-bottom: 35px;
+  }
+`;
+
+const ServiceItem = styled.div`
+  display: flex;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto 60px;
+  opacity: 0;
+  transform: translateX(100px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+
+  &.visible {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  &.reverse {
+    flex-direction: row-reverse;
+  }
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    margin-bottom: 40px;
+
+    &.reverse {
+      flex-direction: column;
     }
-  `;
+  }
+`;
 
-  const ServicesTitle = styled.h2`
-    font-size: 50px;
-    font-weight: 800;
-    margin-bottom: 60px;
-    background: linear-gradient(45deg, #ff8a65, #ff4081, #ffd740);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    text-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+const ServiceImage = styled.div`
+  flex: 1;
+  height: 400px;
+  background-size: cover;
+  background-position: center;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  transition: transform 0.5s ease;
 
-    @media (max-width: 768px) {
-      font-size: 36px;
-      margin-bottom: 40px;
-    }
-  `;
+  &:hover {
+    transform: scale(1.03);
+  }
 
-  const ServiceCard = styled.div`
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 20px;
-    padding: 40px 20px;
-    color: #fff;
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
-    transition: all 0.5s ease;
-    border: 1px solid rgba(255, 64, 129, 0.2);
+  @media (max-width: 768px) {
+    height: 250px;
+    width: 100%;
+    margin-bottom: 20px;
+  }
+`;
 
-    &:hover {
-      transform: translateY(-15px) scale(1.02);
-      background: rgba(255, 255, 255, 0.1);
-      box-shadow: 0 15px 40px rgba(255, 64, 129, 0.3);
-    }
+const ServiceContent = styled.div`
+  flex: 1;
+  padding: 0 40px;
 
-    i {
-      font-size: 60px;
-      margin-bottom: 25px;
-      color: #ff4081;
-      text-shadow: 0 3px 15px rgba(0, 0, 0, 0.3);
-      transition: transform 0.3s ease;
-    }
+  @media (max-width: 768px) {
+    padding: 0 20px;
+    text-align: center;
+  }
+`;
 
-    &:hover i {
-      transform: scale(1.1);
-    }
+const ServiceIcon = styled.i`
+  font-size: 50px;
+  color: #ff4081;
+  margin-bottom: 20px;
+  display: block;
 
-    h5 {
-      font-size: 26px;
-      font-weight: 700;
-      margin-bottom: 15px;
-      color: #ffd740;
-    }
+  @media (max-width: 768px) {
+    font-size: 40px;
+  }
+`;
 
-    p {
-      font-size: 16px;
-      line-height: 1.8;
-      color: #ddd;
-    }
+const ServiceTitle = styled.h5`
+  font-size: 28px;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 15px;
 
-    @media (max-width: 768px) {
-      padding: 30px 15px;
+  @media (max-width: 768px) {
+    font-size: 24px;
+  }
+`;
 
-      i {
-        font-size: 50px;
-        margin-bottom: 20px;
-      }
+const ServiceDescription = styled.p`
+  font-size: 16px;
+  line-height: 1.7;
+  color: #666;
 
-      h5 {
-        font-size: 22px;
-      }
+  @media (max-width: 768px) {
+    font-size: 14px;
+  }
+`;
 
-      p {
-        font-size: 14px;
-      }
-    }
-  `;
+const Services = () => {
+  const serviceRefs = useRef([]);
+  const [visible, setVisible] = useState([false, false, false]);
 
-  const Services = () => {
-    return (
-      <ServicesSection className="py-5 text-center">
-        <div className="container">
-          <ServicesTitle>Our Signature Services</ServicesTitle>
-          <div className="row">
-            <div className="col-md-4 mb-4">
-              <ServiceCard>
-                <i className="fas fa-truck"></i>
-                <h5>Swift Delivery</h5>
-                <p>Delectable meals arrive hot and fresh, right on time.</p>
-              </ServiceCard>
-            </div>
-            <div className="col-md-4 mb-4">
-              <ServiceCard>
-                <i className="fas fa-leaf"></i>
-                <h5>Green Commitment</h5>
-                <p>Sustainable packaging for a tastier, cleaner world.</p>
-              </ServiceCard>
-            </div>
-            <div className="col-md-4 mb-4">
-              <ServiceCard>
-                <i className="fas fa-gift"></i>
-                <h5>Elite Offers</h5>
-                <p>Unwrap exclusive deals for a delightful experience.</p>
-              </ServiceCard>
-            </div>
-          </div>
-        </div>
-      </ServicesSection>
-    );
-  };
+  useEffect(() => {
+    const observers = serviceRefs.current.map((ref, index) => {
+      const observer = new IntersectionObserver(
+        ([entry]) => {
+          if (entry.isIntersecting) {
+            setVisible(prev => {
+              const newVisible = [...prev];
+              newVisible[index] = true;
+              return newVisible;
+            });
+            observer.unobserve(ref);
+          }
+        },
+        { threshold: 0.1 }
+      );
+      if (ref) observer.observe(ref);
+      return observer;
+    });
 
-  export default Services;
+    return () => observers.forEach(observer => observer.disconnect());
+  }, []);
+
+  return (
+    <ServicesSection>
+      <ServicesTitle>Our Signature Services</ServicesTitle>
+      <ServiceItem 
+        ref={el => serviceRefs.current[0] = el}
+        className={visible[0] ? 'visible' : ''}
+      >
+        <ServiceImage style={{ backgroundImage: "url('https://images.pexels.com/photos/4392879/pexels-photo-4392879.jpeg?auto=compress&cs=tinysrgb&w=1600')" }} />
+        <ServiceContent>
+          <ServiceIcon className="fas fa-truck" />
+          <ServiceTitle>Swift Delivery</ServiceTitle>
+          <ServiceDescription>Delectable meals arrive hot and fresh, right on time, ensuring every bite is as perfect as intended.</ServiceDescription>
+        </ServiceContent>
+      </ServiceItem>
+      <ServiceItem 
+        ref={el => serviceRefs.current[1] = el}
+        className={`${visible[1] ? 'visible' : ''} reverse`}
+      >
+        <ServiceImage style={{ backgroundImage: "url('https://images.pexels.com/photos/1109197/pexels-photo-1109197.jpeg?auto=compress&cs=tinysrgb&w=1600')" }} />
+        <ServiceContent>
+          <ServiceIcon className="fas fa-leaf" />
+          <ServiceTitle>Green Commitment</ServiceTitle>
+          <ServiceDescription>Sustainable packaging for a tastier, cleaner world, minimizing our environmental footprint with every order.</ServiceDescription>
+        </ServiceContent>
+      </ServiceItem>
+      <ServiceItem 
+        ref={el => serviceRefs.current[2] = el}
+        className={visible[2] ? 'visible' : ''}
+      >
+        <ServiceImage style={{ backgroundImage: "url('https://images.pexels.com/photos/5916101/pexels-photo-5916101.jpeg?auto=compress&cs=tinysrgb&w=1600')" }} />
+        <ServiceContent>
+          <ServiceIcon className="fas fa-gift" />
+          <ServiceTitle>Elite Offers</ServiceTitle>
+          <ServiceDescription>Unwrap exclusive deals for a delightful experience, making every meal even more rewarding.</ServiceDescription>
+        </ServiceContent>
+      </ServiceItem>
+    </ServicesSection>
+  );
+};
+
+export default Services;
