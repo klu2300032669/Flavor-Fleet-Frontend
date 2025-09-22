@@ -8,7 +8,7 @@ import { useAuth } from "../components/AuthContext";
 
 const HeaderWrapper = styled.header`
   background: rgba(255, 255, 255, 0.98);
-  backdrop-filter: blur(15px);
+  backdrop-filter: blur(20px);
   color: #333;
   padding: 15px 60px;
   display: flex;
@@ -20,7 +20,7 @@ const HeaderWrapper = styled.header`
   left: 0;
   z-index: 1000;
   box-shadow: 0 5px 25px rgba(0, 0, 0, 0.08);
-  transition: transform 0.4s ease, box-shadow 0.4s ease;
+  transition: transform 0.4s ease, box-shadow 0.4s ease, backdrop-filter 0.3s ease;
 
   &.hidden {
     transform: translateY(-100%);
@@ -28,6 +28,7 @@ const HeaderWrapper = styled.header`
 
   &:hover {
     box-shadow: 0 5px 25px rgba(0, 0, 0, 0.12);
+    backdrop-filter: blur(25px);
   }
 
   @media (max-width: 768px) {
@@ -43,6 +44,11 @@ const Logo = styled.div`
   align-items: center;
   cursor: pointer;
   gap: 12px;
+  transition: transform 0.3s ease;
+
+  &:hover {
+    transform: scale(1.02);
+  }
 
   @media (max-width: 768px) {
     max-width: 55%;
@@ -54,14 +60,9 @@ const LogoText = styled.span`
   font-weight: 800;
   letter-spacing: 0.8px;
   text-transform: uppercase;
-  background: linear-gradient(90deg, #ff4081, #ffd740);
+  background: linear-gradient(90deg, #ff6b6b, #ffd93d);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  transition: transform 0.3s ease;
-
-  &:hover {
-    transform: scale(1.02);
-  }
 
   @media (max-width: 768px) {
     font-size: 26px;
@@ -106,7 +107,7 @@ const Nav = styled.nav`
       position: absolute;
       width: 0;
       height: 2px;
-      background: linear-gradient(90deg, #ff4081, #ffd740);
+      background: linear-gradient(90deg, #ff6b6b, #ffd93d);
       bottom: 0;
       left: 50%;
       transform: translateX(-50%);
@@ -114,7 +115,7 @@ const Nav = styled.nav`
     }
 
     &:hover, &.active {
-      color: #ff4081;
+      color: #ff6b6b;
       &::after {
         width: 70%;
       }
@@ -138,6 +139,7 @@ const BottomNav = styled.div`
     left: 0;
     width: 100%;
     background: rgba(255, 255, 255, 0.98);
+    backdrop-filter: blur(15px);
     padding: 10px 0;
     box-shadow: 0 -5px 25px rgba(0, 0, 0, 0.08);
     z-index: 1001;
@@ -162,19 +164,20 @@ const NavItem = styled(Link)`
   transition: all 0.3s ease;
 
   &:hover, &.active {
-    color: #ff4081;
-    transform: scale(1.05);
+    color: #ff6b6b;
+    transform: scale(1.1);
   }
 
   svg {
     font-size: 24px;
     margin-bottom: 5px;
-    color: #ff4081;
-    transition: color 0.3s ease;
+    color: #ff6b6b;
+    transition: color 0.3s ease, transform 0.3s ease;
   }
 
   &:hover svg {
-    color: #ffd740;
+    color: #ffd93d;
+    transform: rotate(15deg);
   }
 `;
 
@@ -184,11 +187,11 @@ const LoginButton = styled(Link)`
   @media (max-width: 768px) {
     display: flex;
     align-items: center;
-    color: #ff4081;
+    color: #ff6b6b;
     font-size: 15px;
     font-weight: 600;
     padding: 10px 18px;
-    border: 1px solid #ff4081;
+    border: 1px solid #ff6b6b;
     border-radius: 30px;
     transition: all 0.3s ease;
     position: absolute;
@@ -197,9 +200,10 @@ const LoginButton = styled(Link)`
     transform: translateY(-50%);
 
     &:hover {
-      background: #ff4081;
+      background: #ff6b6b;
       color: #fff;
-      box-shadow: 0 3px 15px rgba(255, 64, 129, 0.3);
+      box-shadow: 0 3px 15px rgba(255, 107, 107, 0.3);
+      transform: translateY(-50%) scale(1.05);
     }
   }
 `;
@@ -221,13 +225,13 @@ const ProfileButton = styled.button`
   transition: all 0.3s ease;
 
   &:hover {
-    color: #ff4081;
+    color: #ff6b6b;
   }
 
   svg:first-child {
     margin-right: 10px;
     font-size: 22px;
-    color: #ff4081;
+    color: #ff6b6b;
   }
 
   svg:last-child {
@@ -252,6 +256,14 @@ const DropdownContent = styled.div`
   margin-top: 15px;
   border: 1px solid rgba(0, 0, 0, 0.03);
   overflow: hidden;
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+
+  ${props => props.isOpen && `
+    opacity: 1;
+    transform: translateY(0);
+  `}
 `;
 
 const DropdownItem = styled(Link)`
@@ -265,14 +277,20 @@ const DropdownItem = styled(Link)`
   border-bottom: 1px solid rgba(0, 0, 0, 0.03);
 
   &:hover {
-    background-color: rgba(255, 64, 129, 0.05);
-    color: #ff4081;
+    background-color: rgba(255, 107, 107, 0.05);
+    color: #ff6b6b;
+    padding-left: 25px;
   }
 
   svg {
     margin-right: 12px;
     font-size: 18px;
-    color: #ff4081;
+    color: #ff6b6b;
+    transition: transform 0.3s ease;
+  }
+
+  &:hover svg {
+    transform: scale(1.1);
   }
 
   &:last-child {
@@ -294,14 +312,20 @@ const LogoutButton = styled.button`
   cursor: pointer;
 
   &:hover {
-    background-color: rgba(255, 64, 129, 0.05);
-    color: #ff4081;
+    background-color: rgba(255, 107, 107, 0.05);
+    color: #ff6b6b;
+    padding-left: 25px;
   }
 
   svg {
     margin-right: 12px;
     font-size: 18px;
-    color: #ff4081;
+    color: #ff6b6b;
+    transition: transform 0.3s ease;
+  }
+
+  &:hover svg {
+    transform: scale(1.1);
   }
 `;
 
@@ -311,11 +335,11 @@ const MobileProfileButton = styled.button`
   @media (max-width: 768px) {
     display: flex;
     align-items: center;
-    color: #ff4081;
+    color: #ff6b6b;
     font-size: 15px;
     font-weight: 600;
     padding: 10px 18px;
-    border: 1px solid #ff4081;
+    border: 1px solid #ff6b6b;
     border-radius: 30px;
     transition: all 0.3s ease;
     position: absolute;
@@ -326,14 +350,15 @@ const MobileProfileButton = styled.button`
     cursor: pointer;
 
     &:hover {
-      background: #ff4081;
+      background: #ff6b6b;
       color: #fff;
-      box-shadow: 0 3px 15px rgba(255, 64, 129, 0.3);
+      box-shadow: 0 3px 15px rgba(255, 107, 107, 0.3);
+      transform: translateY(-50%) scale(1.05);
     }
 
     svg {
       margin-right: 6px;
-      color: #ff4081;
+      color: #ff6b6b;
     }
   }
 `;
