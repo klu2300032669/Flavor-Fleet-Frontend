@@ -933,6 +933,7 @@ export const AuthProvider = ({ children }) => {
 
   const submitContactForm = useCallback(async (formData) => {
     try {
+      console.log('Submitting contact form:', formData); // Added logging for debugging
       const response = await fetch(`${API_BASE_URL}/api/contact`, {
         method: "POST",
         headers: {
@@ -943,10 +944,12 @@ export const AuthProvider = ({ children }) => {
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
+        console.error('Contact form submission failed:', errorData); // Added logging for errors
         throw new Error(errorData.message || `Failed to submit contact form: ${response.status}`);
       }
 
       const data = await response.json();
+      console.log('Contact form submitted successfully:', data); // Added logging for success
       toast.success(data.message || "Message sent successfully!");
       return { success: true };
     } catch (error) {
@@ -1391,10 +1394,10 @@ export const AuthProvider = ({ children }) => {
         }
         return [...prevCart, savedItem];
       });
-      toast.success(`${item.name} added to cart!`);
+      
     } catch (error) {
       console.error("addToCart error:", error.message);
-      toast.error(error.message || "Failed to add to cart");
+      
     }
   };
 
@@ -1418,10 +1421,10 @@ export const AuthProvider = ({ children }) => {
       }
 
       setCart((prevCart) => prevCart.filter((item) => item.id !== itemId));
-      toast.success("Item removed from cart!");
+      
     } catch (error) {
       console.error("removeFromCart error:", error.message);
-      toast.error(error.message || "Failed to remove from cart");
+      
     }
   };
 
@@ -1455,7 +1458,7 @@ export const AuthProvider = ({ children }) => {
 
       const savedItem = await response.json();
       setCart((prevCart) => prevCart.map((item) => (item.id === itemId ? savedItem : item)));
-      toast.success(`Updated ${cartItem.name} to ${newQuantity}`);
+     
     } catch (error) {
       console.error("updateCartItem error:", error.message);
       toast.error(error.message || "Failed to update cart item");
@@ -1496,7 +1499,7 @@ export const AuthProvider = ({ children }) => {
         }
         return [...prevFavorites, savedItem];
       });
-      toast.success(`${item.name} added to favorites!`);
+      
     } catch (error) {
       console.error("addToFavorites error:", error.message);
       toast.error(error.message || "Failed to add to favorites");
@@ -1523,7 +1526,7 @@ export const AuthProvider = ({ children }) => {
       }
 
       setFavorites((prevFavorites) => prevFavorites.filter((item) => item.itemId !== itemId));
-      toast.success("Item removed from favorites!");
+  
     } catch (error) {
       console.error("removeFromFavorites error:", error.message);
       toast.error(error.message || "Failed to remove from favorites");

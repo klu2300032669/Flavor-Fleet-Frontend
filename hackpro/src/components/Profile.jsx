@@ -395,7 +395,8 @@ const NavLink = styled.button.attrs((props) => ({
         : 'rgba(255, 255, 255, 0.3)' 
       : 'transparent'
   };
-  color: ${({ theme }) => theme.mode === 'dark' ? '#ff9999' : '#ff6666'};
+  color: ${({ theme }) => 
+    theme.mode === 'dark' ? '#ff9999' : '#ff6666'};
   border: none;
   border-radius: 10px;
   padding: 0.8rem 1rem;
@@ -466,6 +467,8 @@ const ProfileTitle = styled.h1`
   margin: 0;
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
 
   svg {
     margin-right: 0.6rem;
@@ -507,7 +510,7 @@ const Button = styled.button.attrs((props) => ({
       $secondary 
         ? theme.mode === 'dark' 
           ? 'rgba(255, 153, 153, 0.1)' 
-          : 'rgba(255, 255, 255, 0.1)' 
+          : 'rgba(255, 102, 102, 0.1)' 
         : theme.mode === 'dark' 
           ? 'rgba(255, 153, 153, 0.3)' 
           : 'rgba(255, 255, 255, 0.4)'
@@ -978,11 +981,9 @@ const FilterContainer = styled.div`
   flex-wrap: wrap;
 `;
 
-const FilterButton = styled.button.attrs((props) => ({
-  $active: props.active,
-}))`
-  background: ${({ $active, theme }) => 
-    $active 
+const FilterButton = styled.button`
+  background: ${({ active, theme }) => 
+    active 
       ? theme.mode === 'dark' 
         ? 'rgba(255, 153, 153, 0.3)' 
         : 'rgba(255, 255, 255, 0.3)' 
@@ -1167,12 +1168,9 @@ const ConfirmationButtons = styled.div`
 
 const SearchContainer = styled.div`
   display: flex;
-  margin-bottom: 1.5rem;
   gap: 1rem;
-
-  @media (max-width: 480px) {
-    flex-direction: column;
-  }
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
 `;
 
 const SearchInput = styled(FormInput)`
@@ -1591,7 +1589,7 @@ const useProfileData = () => {
     deleteUser,
     fetchAllOrders,
     updateOrderStatus,
-    fetchMenu,
+    fetchMenu,  // ✅ ADDED HERE - Now defined from useAuth
     fetchAdminMenu,
     addMenuItem,
     updateMenuItem,
@@ -1790,7 +1788,7 @@ const Profile = () => {
     deleteUser,
     fetchAllOrders,
     updateOrderStatus,
-    fetchMenu,
+    fetchMenu,  // ✅ ADDED HERE - Now defined from useAuth
     fetchAdminMenu,
     addMenuItem,
     updateMenuItem,
@@ -2204,7 +2202,12 @@ const Profile = () => {
     }
     try {
       if (editAddress) {
-        const result = await updateAddress(editAddress.id, addressForm);
+        const result = await updateAddress(editAddress.id, {
+          addressLine1,
+          addressLine2: addressForm.addressLine2,
+          city,
+          pincode
+        });
         if (result.success) {
           setProfileData((prev) => ({
             ...prev,
@@ -2217,7 +2220,12 @@ const Profile = () => {
           throw new Error(result.error || "Failed to update address");
         }
       } else {
-        const result = await addAddress(addressForm);
+        const result = await addAddress({
+          addressLine1,
+          addressLine2: addressForm.addressLine2,
+          city,
+          pincode
+        });
         if (result.success) {
           setProfileData((prev) => ({
             ...prev,
@@ -3943,7 +3951,13 @@ const Profile = () => {
                             <NotificationTypeIndicator type={n.type}>{n.type}</NotificationTypeIndicator>
                           </AdminTableCell>
                           <AdminTableCell theme={{ mode: theme }}>
-                            {n.sentAt ? new Date(n.sentAt).toLocaleString() : n.scheduleDate ? `Scheduled: ${new Date(n.scheduleDate).toLocaleString()}` : "Unknown"}
+                            {n.sentAt
+  ? new Date(n.sentAt).toLocaleString()
+  : n.scheduleDate
+    ? `Scheduled: ${new Date(n.scheduleDate).toLocaleString()}`
+    : "Unknown"
+}
+
                           </AdminTableCell>
                           <AdminTableCell theme={{ mode: theme }}>
                             {n.userIds && n.userIds.length > 0 ? `${n.userIds.length} users` : "All users"}

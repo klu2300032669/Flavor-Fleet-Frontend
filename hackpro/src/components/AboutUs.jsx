@@ -16,7 +16,7 @@
 
   const teamMembers = [
     { id: 1, name: "Saketh Surubhotla", role: "Founder & CEO", image: '/saketh.jpg', bio: "Visionary leader with 15+ years in culinary tech innovation" },
-    { id: 2, name: "Chakradhar Suthapalli", role: "Head Chef", image: '/chakradhar.jpg', bio: "Michelin-starred chef curating our premium restaurant network" },
+    { id: 2, name: "Chakradhar Suthapalli", role: "Co-Founder", image: '/chakradhar.jpg', bio: "Visionary leader with 25+ years in culinary tech innovation" },
     { id: 3, name: "Eswar", role: "CTO", bio: "Tech architect behind our seamless delivery platform" },
   ];
 

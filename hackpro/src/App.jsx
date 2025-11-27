@@ -13,6 +13,7 @@ import Checkout from "./components/Checkout";
 import OrderSuccess from "./components/OrderSuccess";
 import Profile from "./components/Profile";
 import ChangePassword from "./components/ChangePassword.jsx";
+import Orders from "./components/Orders";
 import { AuthProvider, useAuth } from "./components/AuthContext";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -36,7 +37,16 @@ function AppWrapper() {
   const navigate = useNavigate();
   const menuRef = useRef(null);
   const [scrollToOffers, setScrollToOffers] = useState(false);
-  const isExcludedPage = ["/menu", "/contact-us", "/aboutus", "/checkout", "/order-success", "/profile", "/change-password"].includes(location.pathname);
+  const isExcludedPage = [
+    "/menu",
+    "/contact-us",
+    "/aboutus",
+    "/checkout",
+    "/order-success",
+    "/profile",
+    "/change-password",
+    "/orders"
+  ].includes(location.pathname);
 
   useEffect(() => {
     if (scrollToOffers && location.pathname === "/menu" && menuRef.current) {
@@ -55,7 +65,6 @@ function AppWrapper() {
   };
 
   const handleAuthSuccess = (intendedPath) => {
-    // Navigate to the intended path after successful login
     navigate(intendedPath || "/");
   };
 
@@ -104,6 +113,14 @@ function AppWrapper() {
             element={
               <PrivateRoute>
                 <ChangePassword />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/orders"
+            element={
+              <PrivateRoute>
+                <Orders />
               </PrivateRoute>
             }
           />
