@@ -1,13 +1,13 @@
-// Footer.jsx
-import React, { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+// Footer.jsx - Redesigned with About Us and Contact Us
+import React, { useState, useEffect, useCallback } from "react";
+import { useLocation, Link } from "react-router-dom";
 import styled from "styled-components";
 
 const FooterWrapper = styled.footer`
-  padding: 60px 0 25px;
-  background: linear-gradient(180deg, #1a1a1a, #0d0d0d);
+  padding: 60px 0 30px;
+  background: #111827;
   text-align: center;
-  color: #ddd;
+  color: #e5e7eb;
   position: relative;
 
   @media (max-width: 768px) {
@@ -17,16 +17,16 @@ const FooterWrapper = styled.footer`
 
 const FooterContent = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  justify-content: space-between;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   max-width: 1200px;
-  margin: 0 auto 30px;
-  gap: 25px;
-  padding: 0 25px;
+  margin: 0 auto 40px;
+  gap: 40px;
+  padding: 0 40px;
 
   @media (max-width: 768px) {
     grid-template-columns: 1fr;
-    gap: 30px;
+    gap: 35px;
+    padding: 0 20px;
   }
 `;
 
@@ -38,75 +38,73 @@ const FooterColumn = styled.div`
   }
 `;
 
-const FooterBrand = styled(FooterColumn)`
-`;
+const FooterBrand = styled(FooterColumn)``;
 
 const FooterLogo = styled.h3`
-  font-size: 32px;
-  font-weight: 800;
-  color: #ff6b6b;
-  margin-bottom: 8px;
-  transition: color 0.3s ease;
-
-  &:hover {
-    color: #ffd93d;
-  }
+  font-size: 28px;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 10px;
+  letter-spacing: -0.5px;
 
   @media (max-width: 768px) {
-    font-size: 26px;
+    font-size: 24px;
   }
 `;
 
 const FooterTagline = styled.p`
-  font-size: 13px;
-  font-weight: 400;
-  color: #aaa;
-  letter-spacing: 0.5px;
+  font-size: 14px;
+  color: #9ca3af;
+  margin: 0;
 `;
 
 const FooterLinks = styled(FooterColumn)`
   h4 {
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 600;
-    color: #fff;
-    margin-bottom: 15px;
+    color: #ffffff;
+    margin-bottom: 16px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
   }
 
   ul {
     list-style: none;
     padding: 0;
+    margin: 0;
   }
 
   li {
-    margin-bottom: 10px;
+    margin-bottom: 12px;
   }
 
   a {
-    color: #ddd;
+    color: #d1d5db;
     text-decoration: none;
-    font-size: 15px;
-    font-weight: 500;
-    transition: color 0.3s ease, padding-left 0.3s ease;
+    font-size: 14px;
+    font-weight: 400;
+    transition: color 0.3s ease;
+    display: inline-block;
 
-    &:hover, &:focus {
-      color: #ff6b6b;
-      padding-left: 5px;
-      outline: none;
+    &:hover {
+      color: #ffffff;
     }
   }
 `;
 
 const SocialMedia = styled(FooterColumn)`
   h4 {
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 600;
-    color: #fff;
-    margin-bottom: 15px;
+    color: #ffffff;
+    margin-bottom: 16px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
   }
 
   div {
     display: flex;
-    gap: 15px;
+    gap: 16px;
     justify-content: flex-start;
 
     @media (max-width: 768px) {
@@ -115,64 +113,59 @@ const SocialMedia = styled(FooterColumn)`
   }
 
   a {
-    color: #ddd;
-    font-size: 24px;
+    color: #d1d5db;
+    font-size: 22px;
     transition: all 0.3s ease;
-    padding: 5px;
+    padding: 8px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-    &:hover, &:focus {
-      color: #ff6b6b;
-      transform: scale(1.15) rotate(5deg);
-      outline: none;
+    &:hover {
+      color: #ffffff;
+      background: rgba(255, 255, 255, 0.1);
+      transform: translateY(-2px);
     }
-  }
-
-  @media (max-width: 768px) {
-    gap: 10px;
-    font-size: 20px;
   }
 `;
 
-const FooterCopyright = styled.p`
-  font-size: 12px;
-  color: #aaa;
-  margin-top: 20px;
-  letter-spacing: 0.5px;
+const FooterBottom = styled.div`
   border-top: 1px solid rgba(255, 255, 255, 0.1);
-  padding-top: 20px;
+  padding-top: 25px;
+  margin-top: 40px;
+`;
 
-  @media (max-width: 768px) {
-    font-size: 11px;
-    margin-top: 15px;
-  }
+const FooterCopyright = styled.p`
+  font-size: 13px;
+  color: #9ca3af;
+  margin: 0;
 `;
 
 const BackToTopButton = styled.button`
   position: fixed;
   bottom: 40px;
   right: 40px;
-  background: linear-gradient(90deg, #ff6b6b, #ffd93d);
-  color: #fff;
-  border: none;
+  background: #111827;
+  color: white;
+  border: 2px solid #ffffff;
   border-radius: 50%;
   width: 50px;
   height: 50px;
-  font-size: 20px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  font-size: 18px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
   transition: all 0.3s ease;
-  opacity: ${props => props.visible ? 1 : 0};
-  visibility: ${props => props.visible ? 'visible' : 'hidden'};
+  opacity: ${({ $visible }) => ($visible ? 1 : 0)};
+  visibility: ${({ $visible }) => ($visible ? "visible" : "hidden")};
+  transform: ${({ $visible }) => ($visible ? "scale(1)" : "scale(0.8)")};
+  pointer-events: ${({ $visible }) => ($visible ? "auto" : "none")};
   z-index: 1002;
   cursor: pointer;
 
   &:hover {
-    transform: translateY(-5px) rotate(90deg);
-    box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
-  }
-
-  &:focus {
-    outline: 2px solid #fff;
-    outline-offset: 2px;
+    transform: translateY(-4px) scale(1.05);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+    background: #1f2937;
   }
 
   @media (max-width: 768px) {
@@ -180,80 +173,94 @@ const BackToTopButton = styled.button`
     right: 20px;
     width: 45px;
     height: 45px;
-    font-size: 18px;
+    font-size: 16px;
   }
 `;
 
 function Footer() {
   const location = useLocation();
-  const excludedPaths = ["/menu", "/contact-us", "/aboutus"];
   const [showBackToTop, setShowBackToTop] = useState(false);
 
-  useEffect(() => {
-    const handleScroll = () => {
-      setShowBackToTop(window.scrollY > 300);
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+  const handleScroll = useCallback(() => {
+    setShowBackToTop(window.scrollY > 300);
   }, []);
 
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [handleScroll]);
 
-  return !excludedPaths.includes(location.pathname) ? (
-    <FooterWrapper aria-label="Site footer">
-      <BackToTopButton 
-        visible={showBackToTop} 
+  const scrollToTop = useCallback(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, []);
+
+  // Only show footer on home page
+  if (location.pathname !== "/") {
+    return null;
+  }
+
+  return (
+    <FooterWrapper>
+      <BackToTopButton
+        $visible={showBackToTop}
         onClick={scrollToTop}
         aria-label="Scroll to top"
       >
-        <i className="fas fa-arrow-up" aria-hidden="true"></i>
+        ↑
       </BackToTopButton>
+
       <FooterContent>
         <FooterBrand>
           <FooterLogo>Flavor Fleet</FooterLogo>
-          <FooterTagline>A Culinary Voyage</FooterTagline>
+          <FooterTagline>Delicious food delivered to your door</FooterTagline>
         </FooterBrand>
+
         <FooterLinks>
           <h4>Company</h4>
           <ul>
-            <li><a href="/aboutus" className="footer-link" aria-label="About Us">About Us</a></li>
-            <li><a href="/contact-us" className="footer-link" aria-label="Contact Us">Contact Us</a></li>
-            <li><a href="#" className="footer-link" aria-label="Careers">Careers</a></li>
-            <li><a href="#" className="footer-link" aria-label="Blog">Blog</a></li>
+            <li><Link to="/aboutus">About Us</Link></li>
+            <li><Link to="/contact-us">Contact Us</Link></li>
+            <li><Link to="/partner">Partner With Us</Link></li>
+            <li><a href="#">Careers</a></li>
           </ul>
         </FooterLinks>
+
         <FooterLinks>
           <h4>Legal</h4>
           <ul>
-            <li><a href="#" className="footer-link" aria-label="Privacy Policy">Privacy</a></li>
-            <li><a href="#" className="footer-link" aria-label="Terms of Service">Terms</a></li>
-            <li><a href="#" className="footer-link" aria-label="Cookie Policy">Cookies</a></li>
+            <li><a href="#">Privacy Policy</a></li>
+            <li><a href="#">Terms of Service</a></li>
+            <li><a href="#">Cookie Policy</a></li>
+            <li><a href="#">Refund Policy</a></li>
           </ul>
         </FooterLinks>
+
         <SocialMedia>
           <h4>Follow Us</h4>
-          <div aria-label="Social media links">
-            <a href="#" className="social-icon" aria-label="Facebook">
-              <i className="fab fa-facebook-f" aria-hidden="true"></i>
+          <div>
+            <a href="#" aria-label="Facebook">
+              <i className="fab fa-facebook-f" />
             </a>
-            <a href="#" className="social-icon" aria-label="Instagram">
-              <i className="fab fa-instagram" aria-hidden="true"></i>
+            <a href="#" aria-label="Instagram">
+              <i className="fab fa-instagram" />
             </a>
-            <a href="#" className="social-icon" aria-label="Twitter">
-              <i className="fab fa-twitter" aria-hidden="true"></i>
+            <a href="#" aria-label="Twitter">
+              <i className="fab fa-twitter" />
             </a>
-            <a href="#" className="social-icon" aria-label="LinkedIn">
-              <i className="fab fa-linkedin-in" aria-hidden="true"></i>
+            <a href="#" aria-label="LinkedIn">
+              <i className="fab fa-linkedin-in" />
             </a>
           </div>
         </SocialMedia>
       </FooterContent>
-      <FooterCopyright>© 2025 Flavor Fleet. Crafted with Love.</FooterCopyright>
+
+      <FooterBottom>
+        <FooterCopyright>
+          © {new Date().getFullYear()} Flavor Fleet. All rights reserved.
+        </FooterCopyright>
+      </FooterBottom>
     </FooterWrapper>
-  ) : null;
+  );
 }
 
-export default Footer;
+export default React.memo(Footer);

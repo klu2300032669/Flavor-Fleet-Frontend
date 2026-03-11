@@ -1016,7 +1016,7 @@ const ContactUs = () => {
                   boxShadow: '0 4px 15px rgba(255, 111, 97, 0.3)',
                 }}
                 size={isMobile ? 'small' : 'large'}
-              >
+              > 
                 <motion.div animate={{ y: [0, -3, 0] }} transition={{ duration: 1.2, repeat: Infinity }}>
                   <FiChevronUp size={isMobile ? 20 : 26} />
                 </motion.div>
